@@ -101,12 +101,17 @@ my.ui <- fluidPage(
                   label = "College:",
                     #choices = c(unique(as.character(data$INSTNM))),
                   value = "University of Washington-Seattle Campus")
-                   ))),
+                   ),
+            helpText(em("Please type in your college name with first letter capitalized,
+                        for example, Seattle University instead of seattle universtiy")),
+            hr(),
+            helpText(em("Schools user searched the most include: University of Washington-Seattle Campus,
+                        University of Washington-Tacoma Campus, Seattle University, Stanford University")))),
                mainPanel(
                 plotOutput("plot"),
                 img(src="legend.png",width = 200,height = 300))))
 ))
-?textInput
+
 my.server <- function(input, output) {
   
   majors <- reactive({
@@ -116,7 +121,7 @@ my.server <- function(input, output) {
                      PCIP30, PCIP38, PCIP40, PCIP42,
                      PCIP43, PCIP44, PCIP45, PCIP50,
                      PCIP51, PCIP52, PCIP54)
-    temp1 <- temp1[temp1$INSTNM == input$college1 ,]
+    temp1 <- temp1[temp1$INSTNM == input$college1,]
     return(temp1)
   })
   
@@ -137,7 +142,7 @@ my.server <- function(input, output) {
   
   output$plot <- renderPlot({
     origin <- suppressWarnings(as.numeric(t(majors())))
-    barplot(as.numeric(na.omit(origin)), col = c(1:23))
+    barplot(as.numeric(na.omit(origin)), col = c(1:23), xlim = c(0,40), ylim = c(0,0.5))
     })
 }
 
